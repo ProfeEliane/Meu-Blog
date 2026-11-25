@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduVerse.ai | Educação, Tecnologia & Inclusão</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0A0812',
+                            card: '#131022',
+                            light: '#D8D8DC',
+                            lightCard: '#E4E4E8',
+                            purple: '#7C3AED',
+                            neon: '#9D4EDD',
+                            glow: '#C084FC',
+                        }
+                    },
+                    boxShadow: {
+                        'neon': '0 0 25px rgba(157, 78, 221, 0.35)',
+                        'neon-sm': '0 0 12px rgba(157, 78, 221, 0.25)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Padrão sutil de grade futurista inspirado na identidade visual */
+        .bg-grid-dark {
+            background-image: linear-gradient(to right, rgba(157, 78, 221, 0.08) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(157, 78, 221, 0.08) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .bg-grid-light {
+            background-image: linear-gradient(to right, rgba(10, 8, 18, 0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(10, 8, 18, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .text-outline-purple {
+            -webkit-text-stroke: 1.5px rgba(124, 58, 237, 0.35);
+            color: transparent;
+        }
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0A0812;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #7C3AED;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-brand-dark text-white font-sans antialiased selection:bg-brand-purple selection:text-white overflow-x-hidden">
+
+    <!-- Notificação Toast (Substitui alert) -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-brand-card border border-brand-neon text-white px-5 py-3.5 rounded-2xl shadow-neon flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-brand-purple/20 flex items-center justify-center text-brand-glow">
+                <i class="ph-fill ph-check-circle text-xl"></i>
+            </div>
+            <div>
+                <p id="toast-title" class="font-display font-bold text-sm">Prompt Copiado!</p>
+                <p id="toast-desc" class="text-xs text-gray-300">Pronto para colar no seu assistente de IA.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navegação -->
+    <header class="fixed top-0 w-full z-40 bg-brand-dark/85 backdrop-blur-md border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo inspirada no estilo geométrico da imagem -->
+                <a href="#" class="flex items-center gap-2.5 group">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-neon to-brand-purple flex items-center justify-center shadow-neon-sm group-hover:scale-105 transition-transform">
+                        <i class="ph-bold ph-planet text-white text-xl"></i>
+                    </div>
+                    <span class="font-display font-extrabold text-xl tracking-tight text-white">
+                        eduverse<span class="text-brand-glow text-sm font-semibold">.ai</span>
+                    </span>
+                </a>
+
+                <!-- Menu Desktop -->
+                <nav class="hidden md:flex items-center gap-8">
+                    <a href="#ferramentas-ia" class="text-sm font-medium text-gray-300 hover:text-brand-glow transition-colors">Ferramentas de IA</a>
+                    <a href="#biblioteca-prompts" class="text-sm font-medium text-gray-300 hover:text-brand-glow transition-colors">Biblioteca de Prompts</a>
+                    <a href="#educacao-inclusiva" class="text-sm font-medium text-gray-300 hover:text-brand-glow transition-colors">Inclusão & Adaptação</a>
+                    <a href="#artigos" class="text-sm font-medium text-gray-300 hover:text-brand-glow transition-colors">Artigos</a>
+                </nav>
+
+                <!-- Botão CTA / Menu Mobile -->
+                <div class="flex items-center gap-3">
+                    <button onclick="openModal('modal-newsletter')" class="hidden sm:inline-flex items-center gap-2 bg-brand-purple hover:bg-brand-neon text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-all shadow-neon-sm hover:shadow-neon">
+                        <i class="ph-bold ph-sparkle"></i>
+                        <span>Newsletter Docente</span>
+                    </button>
+                    <button id="mobile-menu-btn" class="md:hidden p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-200">
+                        <i class="ph ph-list text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Mobile Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-brand-card border-b border-white/10 px-4 pt-2 pb-6 space-y-2">
+            <a href="#ferramentas-ia" class="block px-4 py-3 rounded-xl text-base font-medium text-gray-200 hover:bg-brand-purple/20 hover:text-brand-glow">Ferramentas de IA</a>
+            <a href="#biblioteca-prompts" class="block px-4 py-3 rounded-xl text-base font-medium text-gray-200 hover:bg-brand-purple/20 hover:text-brand-glow">Biblioteca de Prompts</a>
+            <a href="#educacao-inclusiva" class="block px-4 py-3 rounded-xl text-base font-medium text-gray-200 hover:bg-brand-purple/20 hover:text-brand-glow">Inclusão & Adaptação</a>
+            <a href="#artigos" class="block px-4 py-3 rounded-xl text-base font-medium text-gray-200 hover:bg-brand-purple/20 hover:text-brand-glow">Artigos Recentes</a>
+            <button onclick="openModal('modal-newsletter')" class="w-full mt-2 flex items-center justify-center gap-2 bg-brand-purple text-white text-sm font-semibold px-5 py-3 rounded-xl">
+                <i class="ph-bold ph-sparkle"></i>
+                <span>Receber Dicas Semanais</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- HERO SECTION (Estilo Espacial Escuro + Roxo Neon da Imagem) -->
+    <section class="relative pt-32 pb-20 lg:pt-44 lg:pb-32 bg-brand-dark bg-grid-dark overflow-hidden">
+        <!-- Efeitos de Luz Roxo Neon no Fundo -->
+        <div class="absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-brand-purple/25 rounded-full blur-[120px] pointer-events-none"></div>
+        <div class="absolute bottom-0 right-10 w-[350px] h-[350px] bg-brand-neon/20 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-12 gap-12 items-center">
+                <!-- Coluna de Texto -->
+                <div class="lg:col-span-7 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-purple/15 border border-brand-neon/40 text-brand-glow text-xs font-semibold uppercase tracking-wider mb-6">
+                        <span class="w-2 h-2 rounded-full bg-brand-glow animate-pulse"></span>
+                        Inovação Pedagógica na Prática
+                    </div>
+
+                    <h1 class="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl leading-[1.12] tracking-tight mb-6">
+                        Transforme sua sala de aula com <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-glow via-brand-neon to-purple-400">Inteligência Artificial</span> & Inclusão.
+                    </h1>
+
+                    <p class="text-gray-300 text-base sm:text-lg max-w-2xl mx-auto lg:mx-0 mb-8 leading-relaxed">
+                        Um hub criado de profe para profe. Descubra ferramentas de IA testadas, copie prompts prontos para planos de aula e aprenda a adaptar materiais para TEA, TDAH, AH/SD e DI.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                        <a href="#biblioteca-prompts" class="w-full sm:w-auto px-7 py-4 rounded-full bg-gradient-to-r from-brand-purple to-brand-neon hover:brightness-110 text-white font-display font-bold text-sm tracking-wide shadow-neon transition-all flex items-center justify-center gap-2">
+                            <i class="ph-bold ph-terminal-window text-lg"></i>
+                            Explorar Biblioteca de Prompts
+                        </a>
+                        <a href="#educacao-inclusiva" class="w-full sm:w-auto px-7 py-4 rounded-full bg-white/5 hover:bg-white/10 border border-white/15 text-white font-display font-semibold text-sm transition-all flex items-center justify-center gap-2">
+                            <i class="ph-bold ph-puzzle-piece text-lg text-brand-glow"></i>
+                            Guia de Adaptação Inclusiva
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Coluna Visual (Arte SVG Inspirada no Foguete & Astronauta da Imagem) -->
+                <div class="lg:col-span-5 flex justify-center">
+                    <div class="relative w-full max-w-md">
+                        <!-- Card Flutuante Principal -->
+                        <div class="bg-brand-card/90 backdrop-blur-xl border border-brand-neon/40 rounded-3xl p-6 shadow-neon relative overflow-hidden">
+                            <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-5">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+                                    <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
+                                    <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+                                </div>
+                                <span class="text-xs font-mono text-brand-glow bg-brand-purple/20 px-3 py-1 rounded-full">Copiloto Pedagógico</span>
+                            </div>
+
+                            <!-- Ilustração SVG Foguete Roxo + Educação -->
+                            <div class="flex justify-center my-4">
+                                <svg class="w-48 h-48 drop-shadow-[0_0_20px_rgba(157,78,221,0.6)]" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <!-- Órbita -->
+                                    <ellipse cx="100" cy="105" rx="82" ry="28" transform="rotate(-18 100 105)" stroke="url(#orbitGrad)" stroke-width="2" stroke-dasharray="6 6"/>
+                                    <!-- Chama do foguete -->
+                                    <path d="M88 148C88 148 93 175 100 182C107 175 112 148 112 148H88Z" fill="url(#flameGrad)"/>
+                                    <!-- Aletas -->
+                                    <path d="M76 122L56 144L78 140V122Z" fill="#5B21B6"/>
+                                    <path d="M124 122L144 144L122 140V122Z" fill="#5B21B6"/>
+                                    <!-- Corpo do Foguete -->
+                                    <path d="M100 26C78 52 74 96 78 142H122C126 96 122 52 100 26Z" fill="url(#rocketGrad)"/>
+                                    <!-- Janela -->
+                                    <circle cx="100" cy="84" r="16" fill="#0A0812" stroke="#C084FC" stroke-width="4"/>
+                                    <circle cx="95" cy="79" r="4" fill="#FFFFFF" fill-opacity="0.7"/>
+                                    <!-- Estrelas -->
+                                    <circle cx="42" cy="48" r="3" fill="#C084FC"/>
+                                    <circle cx="162" cy="62" r="2.5" fill="#9D4EDD"/>
+                                    <circle cx="154" cy="150" r="3.5" fill="#C084FC"/>
+                                    <defs>
+                                        <linearGradient id="rocketGrad" x1="74" y1="26" x2="126" y2="142" gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#C084FC"/>
+                                            <stop offset="0.5" stop-color="#7C3AED"/>
+                                            <stop offset="1" stop-color="#3B0764"/>
+                                        </linearGradient>
+                                        <linearGradient id="flameGrad" x1="100" y1="148" x2="100" y2="182" gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#FBBF24"/>
+                                            <stop offset="1" stop-color="#EF4444" stop-opacity="0"/>
+                                        </linearGradient>
+                                        <linearGradient id="orbitGrad" x1="18" y1="105" x2="182" y2="105" gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#9D4EDD" stop-opacity="0.1"/>
+                                            <stop offset="0.5" stop-color="#C084FC"/>
+                                            <stop offset="1" stop-color="#9D4EDD" stop-opacity="0.1"/>
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+
+                            <div class="space-y-3 mt-4">
+                                <div class="bg-brand-dark/80 border border-white/10 rounded-2xl p-3.5 flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-9 h-9 rounded-xl bg-brand-purple/30 flex items-center justify-center text-brand-glow">
+                                            <i class="ph-bold ph-clock-countdown text-lg"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs text-gray-400">Economia de planejamento</p>
+                                            <p class="font-display font-bold text-sm text-white">+6 horas livres por semana</p>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs font-bold text-emerald-400 bg-emerald-400/10 px-2.5 py-1 rounded-full">Comprovado</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO 1: FERRAMENTAS DE IA APLICADAS À PRÁTICA PEDAGÓGICA (Fundo Claro Minimalista estilo "Psicologia das Cores" da imagem) -->
+    <section id="ferramentas-ia" class="py-20 lg:py-28 bg-brand-light text-brand-dark bg-grid-light relative overflow-hidden">
+        <!-- Tipografia Gigante Decorativa de Fundo (Igual ao poster "PSICOLOGIA" da imagem) -->
+        <div class="absolute top-8 left-1/2 -translate-x-1/2 select-none pointer-events-none opacity-60 overflow-hidden w-full text-center">
+            <span class="font-display font-extrabold text-[80px] sm:text-[130px] lg:text-[170px] leading-none tracking-tighter text-outline-purple uppercase">
+                FERRAMENTAS
+            </span>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center max-w-3xl mx-auto mb-14">
+                <span class="inline-block px-4 py-1.5 rounded-full bg-brand-purple/15 text-brand-purple font-bold text-xs uppercase tracking-wider mb-3">
+                    Curadoria Pedagógica
+                </span>
+                <h2 class="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-brand-dark mb-4">
+                    Ferramentas de <span class="text-brand-purple">IA</span> que potencializam suas aulas
+                </h2>
+                <p class="text-gray-700 text-base sm:text-lg">
+                    Selecionamos as melhores plataformas de inteligência artificial com foco em didática, avaliação formativa, criação de slides e gamificação.
+                </p>
+            </div>
+
+            <!-- Filtros de Categoria -->
+            <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-10" id="tool-filters">
+                <button data-filter="all" class="tool-filter-btn active px-5 py-2.5 rounded-full text-sm font-semibold bg-brand-dark text-white shadow-md transition-all">
+                    Todas as Ferramentas
+                </button>
+                <button data-filter="planejamento" class="tool-filter-btn px-5 py-2.5 rounded-full text-sm font-semibold bg-white/80 hover:bg-white text-brand-dark border border-black/10 transition-all">
+                    Planejamento & Roteiros
+                </button>
+                <button data-filter="visual" class="tool-filter-btn px-5 py-2.5 rounded-full text-sm font-semibold bg-white/80 hover:bg-white text-brand-dark border border-black/10 transition-all">
+                    Slides & Visuais
+                </button>
+                <button data-filter="avaliacao" class="tool-filter-btn px-5 py-2.5 rounded-full text-sm font-semibold bg-white/80 hover:bg-white text-brand-dark border border-black/10 transition-all">
+                    Quizzes & Avaliação
+                </button>
+            </div>
+
+            <!-- Grid de Ferramentas -->
+            <div id="tools-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Cards inseridos via JS para fácil manutenção -->
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO 2: BIBLIOTECA DE PROMPTS PEDAGÓGICOS (Fundo Escuro Espacial com Destaques Neon) -->
+    <section id="biblioteca-prompts" class="py-20 lg:py-28 bg-brand-dark bg-grid-dark relative">
+        <div class="absolute top-1/3 left-0 w-80 h-80 bg-brand-purple/20 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex flex-col lg:flex-row lg:items-end justify-between mb-12 gap-6">
+                <div>
+                    <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-purple/20 border border-brand-neon/30 text-brand-glow font-semibold text-xs uppercase tracking-wider mb-3">
+                        <i class="ph-bold ph-magic-wand"></i> Engenharia de Prompt Docente
+                    </span>
+                    <h2 class="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-white">
+                        Biblioteca de <span class="text-brand-glow">Prompts Prontos</span>
+                    </h2>
+                </div>
+                <p class="text-gray-300 max-w-md text-sm sm:text-base">
+                    Clique em <strong class="text-white">"Copiar Prompt"</strong>, substitua os campos entre colchetes <code class="text-brand-glow bg-white/5 px-1.5 py-0.5 rounded">[ASSIM]</code> e cole no ChatGPT, Gemini ou Claude.
+                </p>
+            </div>
+
+            <!-- Barra de Busca e Filtro de Prompts -->
+            <div class="bg-brand-card border border-white/10 rounded-2xl p-4 mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div class="relative w-full md:w-96">
+                    <i class="ph ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
+                    <input type="text" id="prompt-search" placeholder="Buscar prompt (ex: BNCC, rubrica, jogos)..." 
+                        class="w-full bg-brand-dark border border-white/10 focus:border-brand-neon rounded-xl pl-11 pr-4 py-3 text-sm text-white placeholder-gray-400 focus:outline-none transition-colors">
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-start md:justify-end" id="prompt-categories">
+                    <button data-cat="all" class="prompt-cat-btn active px-4 py-2 rounded-xl text-xs font-bold bg-brand-purple text-white transition-all">Todos</button>
+                    <button data-cat="planos" class="prompt-cat-btn px-4 py-2 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 text-gray-300 transition-all">Planos BNCC</button>
+                    <button data-cat="atividades" class="prompt-cat-btn px-4 py-2 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 text-gray-300 transition-all">Atividades & Jogos</button>
+                    <button data-cat="avaliacao" class="prompt-cat-btn px-4 py-2 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 text-gray-300 transition-all">Rubricas & Provas</button>
+                    <button data-cat="inclusao" class="prompt-cat-btn px-4 py-2 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 text-gray-300 transition-all">Adaptação PEI</button>
+                </div>
+            </div>
+
+            <!-- Grid de Cards de Prompts -->
+            <div id="prompts-grid" class="grid md:grid-cols-2 gap-6">
+                <!-- Prompts renderizados via JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO 3: EDUCAÇÃO INCLUSIVA & ADAPTAÇÃO DE MATERIAIS (TEA, TDAH, AH/SD, DI) -->
+    <section id="educacao-inclusiva" class="py-20 lg:py-28 bg-gradient-to-b from-[#110D20] to-brand-dark border-t border-white/10 relative overflow-hidden">
+        <div class="absolute right-0 top-20 w-96 h-96 bg-brand-neon/15 rounded-full blur-[130px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center max-w-3xl mx-auto mb-14">
+                <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-purple/20 border border-brand-neon/40 text-brand-glow font-semibold text-xs uppercase tracking-wider mb-3">
+                    <i class="ph-bold ph-heart-half"></i> Desenho Universal para a Aprendizagem (DUA)
+                </span>
+                <h2 class="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-white mb-4">
+                    Adaptação de Materiais para <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-glow to-purple-300">Educação Inclusiva</span>
+                </h2>
+                <p class="text-gray-300 text-base sm:text-lg">
+                    Estratégias práticas, ajustes visuais e comandos de IA para tornar suas atividades acessíveis a todos os perfis neurodivergentes.
+                </p>
+            </div>
+
+            <!-- Abas Interativas por Perfil -->
+            <div class="bg-brand-card/90 border border-brand-neon/30 rounded-3xl p-4 sm:p-8 shadow-neon">
+                <!-- Botões das Abas -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8" role="tablist">
+                    <button onclick="switchInclusionTab('tea')" id="tab-tea" class="inclusion-tab active flex flex-col items-center justify-center p-4 rounded-2xl border border-brand-neon bg-brand-purple/25 text-white transition-all">
+                        <i class="ph-bold ph-puzzle-piece text-2xl text-brand-glow mb-1.5"></i>
+                        <span class="font-display font-bold text-base">TEA</span>
+                        <span class="text-[11px] text-gray-300 text-center">Transtorno do Espectro Autista</span>
+                    </button>
+
+                    <button onclick="switchInclusionTab('tdah')" id="tab-tdah" class="inclusion-tab flex flex-col items-center justify-center p-4 rounded-2xl border border-white/10 bg-brand-dark/60 hover:bg-white/5 text-gray-300 transition-all">
+                        <i class="ph-bold ph-lightning text-2xl text-brand-glow mb-1.5"></i>
+                        <span class="font-display font-bold text-base">TDAH</span>
+                        <span class="text-[11px] text-gray-400 text-center">Déficit de Atenção e Hiperatividade</span>
+                    </button>
+
+                    <button onclick="switchInclusionTab('ahsd')" id="tab-ahsd" class="inclusion-tab flex flex-col items-center justify-center p-4 rounded-2xl border border-white/10 bg-brand-dark/60 hover:bg-white/5 text-gray-300 transition-all">
+                        <i class="ph-bold ph-rocket-launch text-2xl text-brand-glow mb-1.5"></i>
+                        <span class="font-display font-bold text-base">AH/SD</span>
+                        <span class="text-[11px] text-gray-400 text-center">Altas Habilidades / Superdotação</span>
+                    </button>
+
+                    <button onclick="switchInclusionTab('di')" id="tab-di" class="inclusion-tab flex flex-col items-center justify-center p-4 rounded-2xl border border-white/10 bg-brand-dark/60 hover:bg-white/5 text-gray-300 transition-all">
+                        <i class="ph-bold ph-brain text-2xl text-brand-glow mb-1.5"></i>
+                        <span class="font-display font-bold text-base">DI & Dislexia</span>
+                        <span class="text-[11px] text-gray-400 text-center">Deficiência Intelectual e Leitura</span>
+                    </button>
+                </div>
+
+                <!-- Conteúdo Dinâmico da Aba Selecionada -->
+                <div id="inclusion-content" class="grid lg:grid-cols-12 gap-8 items-start">
+                    <!-- Preenchido via JS -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO 4: ARTIGOS & TENDÊNCIAS DO BLOG (Estilo Claro Minimalista Contrastante) -->
+    <section id="artigos" class="py-20 lg:py-28 bg-brand-light text-brand-dark bg-grid-light">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
+                <div>
+                    <span class="inline-block px-4 py-1.5 rounded-full bg-brand-dark text-white font-bold text-xs uppercase tracking-wider mb-3">
+                        Leitura Recomendada
+                    </span>
+                    <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-brand-dark">
+                        Últimos Artigos do <span class="text-brand-purple">Blog</span>
+                    </h2>
+                </div>
+                <p class="text-gray-700 text-sm sm:text-base max-w-md">
+                    Reflexões práticas sobre ética na IA, metodologias ativas e neuroeducação.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Artigo 1 -->
+                <article class="bg-white rounded-3xl overflow-hidden border border-black/10 shadow-sm hover:shadow-xl transition-all group flex flex-col">
+                    <div class="h-48 bg-brand-dark relative p-6 flex flex-col justify-between overflow-hidden">
+                        <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-brand-purple/40 rounded-full blur-xl"></div>
+                        <span class="relative z-10 self-start px-3 py-1 rounded-full bg-brand-purple text-white text-xs font-bold">Neuroeducação</span>
+                        <i class="ph-duotone ph-brain text-6xl text-brand-glow relative z-10 group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-2 text-xs text-gray-500 mb-2">
+                                <span>5 min de leitura</span> • <span>Atualizado</span>
+                            </div>
+                            <h3 class="font-display font-bold text-xl text-brand-dark mb-3 group-hover:text-brand-purple transition-colors">
+                                Como usar o Desenho Universal para a Aprendizagem (DUA) com apoio de IA
+                            </h3>
+                            <p class="text-gray-600 text-sm leading-relaxed mb-6">
+                                Aprenda a estruturar uma única aula com múltiplos meios de engajamento e representação, atendendo toda a turma sem criar tarefas segregadas.
+                            </p>
+                        </div>
+                        <button onclick="openArticleModal(0)" class="inline-flex items-center gap-2 text-sm font-bold text-brand-purple hover:text-brand-dark transition-colors">
+                            <span>Ler artigo completo</span>
+                            <i class="ph-bold ph-arrow-right"></i>
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Artigo 2 -->
+                <article class="bg-white rounded-3xl overflow-hidden border border-black/10 shadow-sm hover:shadow-xl transition-all group flex flex-col">
+                    <div class="h-48 bg-[#161129] relative p-6 flex flex-col justify-between overflow-hidden">
+                        <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-brand-neon/40 rounded-full blur-xl"></div>
+                        <span class="relative z-10 self-start px-3 py-1 rounded-full bg-brand-neon text-white text-xs font-bold">Avaliação & Ética</span>
+                        <i class="ph-duotone ph-shield-check text-6xl text-brand-glow relative z-10 group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-2 text-xs text-gray-500 mb-2">
+                                <span>7 min de leitura</span> • <span>Guia Prático</span>
+                            </div>
+                            <h3 class="font-display font-bold text-xl text-brand-dark mb-3 group-hover:text-brand-purple transition-colors">
+                                Meus alunos usam ChatGPT nas tarefas: como reformular avaliações?
+                            </h3>
+                            <p class="text-gray-600 text-sm leading-relaxed mb-6">
+                                Em vez de proibir a tecnologia, veja como criar questões baseadas em pensamento crítico, estudos de caso locais e defesa oral.
+                            </p>
+                        </div>
+                        <button onclick="openArticleModal(1)" class="inline-flex items-center gap-2 text-sm font-bold text-brand-purple hover:text-brand-dark transition-colors">
+                            <span>Ler artigo completo</span>
+                            <i class="ph-bold ph-arrow-right"></i>
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Artigo 3 -->
+                <article class="bg-white rounded-3xl overflow-hidden border border-black/10 shadow-sm hover:shadow-xl transition-all group flex flex-col">
+                    <div class="h-48 bg-brand-dark relative p-6 flex flex-col justify-between overflow-hidden">
+                        <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-purple-500/40 rounded-full blur-xl"></div>
+                        <span class="relative z-10 self-start px-3 py-1 rounded-full bg-brand-purple text-white text-xs font-bold">Produtividade</span>
+                        <i class="ph-duotone ph-sparkle text-6xl text-brand-glow relative z-10 group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-2 text-xs text-gray-500 mb-2">
+                            <span>4 min de leitura</span> • <span>Passo a Passo</span>
+                        </div>
+                        <h3 class="font-display font-bold text-xl text-brand-dark mb-3 group-hover:text-brand-purple transition-colors">
+                            O Método P.R.O.F.E.: A fórmula definitiva para escrever prompts pedagógicos
+                        </h3>
+                        <p class="text-gray-600 text-sm leading-relaxed mb-6">
+                            Propósito, Referência, Orientações, Foco no público e Estilo e Emoção. Domine esses 5 pilares para gerar materiais didáticos sob medida.
+                        </p>
+                    </div>
+                    <button onclick="openArticleModal(2)" class="inline-flex items-center gap-2 text-sm font-bold text-brand-purple hover:text-brand-dark transition-colors">
+                            <span>Ler artigo completo</span>
+                            <i class="ph-bold ph-arrow-right"></i>
+                        </button>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER (Dark Futurista) -->
+    <footer class="bg-brand-dark border-t border-white/10 pt-16 pb-10 text-gray-400">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-10 pb-12 border-b border-white/10">
+                <div class="md:col-span-2">
+                    <a href="#" class="flex items-center gap-2.5 mb-4">
+                        <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-brand-neon to-brand-purple flex items-center justify-center">
+                            <i class="ph-bold ph-planet text-white text-lg"></i>
+                        </div>
+                        <span class="font-display font-extrabold text-xl tracking-tight text-white">
+                            eduverse<span class="text-brand-glow text-sm font-semibold">.ai</span>
+                        </span>
+                    </a>
+                    <p class="text-sm text-gray-400 max-w-md leading-relaxed">
+                        Capacitando educadores com tecnologia acessível, inteligência artificial ética e práticas reais de inclusão escolar.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="font-display font-bold text-white text-sm uppercase tracking-wider mb-4">Navegação</h4>
+                    <ul class="space-y-2.5 text-sm">
+                        <li><a href="#ferramentas-ia" class="hover:text-brand-glow transition-colors">Ferramentas de IA</a></li>
+                        <li><a href="#biblioteca-prompts" class="hover:text-brand-glow transition-colors">Biblioteca de Prompts</a></li>
+                        <li><a href="#educacao-inclusiva" class="hover:text-brand-glow transition-colors">Adaptação Inclusiva</a></li>
+                        <li><a href="#artigos" class="hover:text-brand-glow transition-colors">Artigos & Guias</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-display font-bold text-white text-sm uppercase tracking-wider mb-4">Perfis Inclusivos</h4>
+                    <ul class="space-y-2.5 text-sm">
+                        <li><button onclick="scrollToInclusion('tea')" class="hover:text-brand-glow transition-colors">Adaptações para TEA</button></li>
+                        <li><button onclick="scrollToInclusion('tdah')" class="hover:text-brand-glow transition-colors">Estratégias para TDAH</button></li>
+                        <li><button onclick="scrollToInclusion('ahsd')" class="hover:text-brand-glow transition-colors">Enriquecimento AH/SD</button></li>
+                        <li><button onclick="scrollToInclusion('di')" class="hover:text-brand-glow transition-colors">Acessibilidade DI & Dislexia</button></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs gap-4">
+                <p>© 2026 EduVerse.ai — Feito para transformar a educação.</p>
+                <p class="text-gray-500">Tecnologia a serviço da humanização pedagógica.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL DE LEITURA DE ARTIGO -->
+    <div id="modal-article" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        <div class="bg-brand-card border border-brand-neon/40 rounded-3xl max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 sm:p-8 shadow-neon relative">
+            <button onclick="closeModal('modal-article')" class="absolute top-5 right-5 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white">
+                <i class="ph-bold ph-x"></i>
+            </button>
+            <span id="modal-article-tag" class="inline-block px-3 py-1 rounded-full bg-brand-purple/30 text-brand-glow text-xs font-bold mb-3">Categoria</span>
+            <h3 id="modal-article-title" class="font-display font-extrabold text-2xl sm:text-3xl text-white mb-4">Título do Artigo</h3>
+            <div id="modal-article-body" class="space-y-4 text-gray-300 text-sm sm:text-base leading-relaxed">
+                <!-- Conteúdo injetado via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE NEWSLETTER -->
+    <div id="modal-newsletter" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        <div class="bg-brand-card border border-brand-neon/40 rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-neon relative text-center">
+            <button onclick="closeModal('modal-newsletter')" class="absolute top-5 right-5 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white">
+                <i class="ph-bold ph-x"></i>
+            </button>
+            <div class="w-14 h-14 rounded-2xl bg-brand-purple/20 border border-brand-neon/40 flex items-center justify-center text-brand-glow mx-auto mb-4">
+                <i class="ph-bold ph-paper-plane-tilt text-2xl"></i>
+            </div>
+            <h3 class="font-display font-extrabold text-2xl text-white mb-2">Boletim EduVerse.ai</h3>
+            <p class="text-sm text-gray-300 mb-6">Receba toda terça-feira 3 prompts inéditos e 1 guia prático de inclusão escolar direto no seu e-mail.</p>
+            <form onsubmit="handleNewsletterSubmit(event)" class="space-y-3">
+                <input type="text" required placeholder="Seu nome (ex: Prof.ª Ana)" class="w-full bg-brand-dark border border-white/15 rounded-xl px-4 py-3 text-sm text-white focus:border-brand-neon focus:outline-none">
+                <input type="email" required placeholder="Seu melhor e-mail" class="w-full bg-brand-dark border border-white/15 rounded-xl px-4 py-3 text-sm text-white focus:border-brand-neon focus:outline-none">
+                <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-purple to-brand-neon text-white font-display font-bold text-sm shadow-neon hover:brightness-110 transition-all">
+                    Quero Receber Gratuitamente
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- SCRIPTS DA APLICAÇÃO -->
+    <script>
+        // --- DADOS DAS FERRAMENTAS DE IA ---
+        const toolsData = [
+            {
+                name: "MagicSchool AI",
+                category: "planejamento",
+                tag: "Planejamento & PEI",
+                icon: "ph-magic-wand",
+                desc: "Suíte com mais de 60 ferramentas específicas para docentes: gerador de planos alinhados à BNCC, adaptador de textos e criador de rubricas.",
+                tip: "Use a função 'Text Leveler' para adaptar o mesmo texto histórico para 3 níveis diferentes de leitura."
+            },
+            {
+                name: "Gamma.app",
+                category: "visual",
+                tag: "Slides & Visuais",
+                icon: "ph-presentation-chart",
+                desc: "Crie apresentações visuais modernas, cartões interativos e páginas de resumo em segundos a partir de um tópico ou roteiro de aula.",
+                tip: "Cole o resumo do seu plano de aula e peça para gerar slides com diagramas visuais para alunos visuais e TDAH."
+            },
+            {
+                name: "Quizizz AI",
+                category: "avaliacao",
+                tag: "Quizzes & Gamificação",
+                icon: "ph-game-controller",
+                desc: "Transforma links do YouTube, PDFs ou temas em quizzes gamificados com feedback imediato e relatórios de desempenho por habilidade.",
+                tip: "Ative o modo 'Leitura em Voz Alta' e tempo flexível para tornar o jogo acessível a alunos com Dislexia ou TEA."
+            },
+            {
+                name: "Diffit for Teachers",
+                category: "planejamento",
+                tag: "Diferenciação Didática",
+                icon: "ph-sliders-horizontal",
+                desc: "Gera pacotes completos de leitura adaptada, vocabulário-chave, perguntas de múltipla escolha e questões abertas para qualquer nível escolar.",
+                tip: "Ideal para trabalhar o mesmo conteúdo curricular com estudantes que possuem Deficiência Intelectual (DI)."
+            },
+            {
+                name: "Canva Educação (Estúdio Mágico)",
+                category: "visual",
+                tag: "Design & Pictogramas",
+                icon: "ph-paint-brush-broad",
+                desc: "Gratuito para professores verificados. Permite gerar ilustrações personalizadas, cartões de rotina visual e infográficos didáticos.",
+                tip: "Crie agendas visuais passo a passo para estudantes autistas usando ícones consistentes e fundo limpo."
+            },
+            {
+                name: "Curipod",
+                category: "avaliacao",
+                tag: "Aulas Interativas",
+                icon: "ph-chats-teardrop",
+                desc: "Gera slides interativos onde os alunos participam com desenhos, nuvens de palavras e recebem feedback formativo da IA em tempo real.",
+                tip: "Excelente para engajar estudantes com TDAH através de check-ins rápidos a cada 10 minutos de aula."
+            }
+        ];
+
+        // --- DADOS DA BIBLIOTECA DE PROMPTS ---
+        const promptsData = [
+            {
+                title: "Sequência Didática Alinhada à BNCC",
+                category: "planos",
+                catLabel: "Planos BNCC",
+                prompt: "Atue como um coordenador pedagógico especialista na BNCC. Crie uma sequência didática de [NÚMERO] aulas sobre [TEMA] para o [ANO/SÉRIE] do Ensino [FUNDAMENTAL/MÉDIO]. Inclua: códigos das habilidades da BNCC, objetivos de aprendizagem, metodologia ativa (ex: sala de aula invertida), recursos necessários e uma proposta de avaliação formativa."
+            },
+            {
+                title: "Gamificação e RPG Pedagógico",
+                category: "atividades",
+                catLabel: "Atividades & Jogos",
+                prompt: "Crie um jogo narrativo estilo RPG de mesa curto (duração de 40 minutos) para revisar o conteúdo de [CONTEÚDO] com alunos de [IDADE] anos. Divida a turma em 4 equipes, crie um cenário imersivo, 5 desafios progressivos onde resolver questões da matéria faz a equipe avançar, e regras claras de pontuação."
+            },
+            {
+                title: "Gerador de Rubricas de Avaliação",
+                category: "avaliacao",
+                catLabel: "Rubricas & Provas",
+                prompt: "Elabore uma rubrica de avaliação analítica em formato de tabela para um trabalho de [TIPO DE TRABALHO, EX: SEMINÁRIO / REDAÇÃO] sobre [TEMA] para o [ANO/SÉRIE]. Utilize 4 níveis de desempenho (Iniciante, Em Desenvolvimento, Proficiente, Avançado) e avalie os critérios: domínio conceitual, pensamento crítico, clareza na comunicação e colaboração."
+            },
+            {
+                title: "Adaptação de Atividade para TEA (Suporte Visual e Literalidade)",
+                category: "inclusao",
+                catLabel: "Adaptação PEI",
+                prompt: "Atue como especialista em Educação Especial e Inclusiva. Adapte o texto e as questões abaixo para um estudante do [ANO/SÉRIE] com Transtorno do Espectro Autista (TEA) nível 1/2 de suporte. Regras: 1) Substitua metáforas e linguagem figurada por linguagem direta e objetiva; 2) Quebre enunciados longos em passos numerados (Passo 1, Passo 2); 3) Sugira apoios visuais/pictogramas para cada questão. Texto original: [COLAR TEXTO]."
+            },
+            {
+                title: "Desafio de Aprofundamento para AH/SD (Altas Habilidades)",
+                category: "inclusao",
+                catLabel: "Adaptação PEI",
+                prompt: "Crie uma atividade de enriquecimento curricular para um estudante com Altas Habilidades/Superdotação (AH/SD) no [ANO/SÉRIE] que já domina o conteúdo básico de [TEMA]. Proponha um problema aberto do mundo real que exija pensamento divergente, interdisciplinaridade com [OUTRA DISCIPLINA] e autonomia investigativa, evitando apenas dar 'mais exercícios repetitivos'."
+            },
+            {
+                title: "Questões Contextualizadas Estilo ENEM / SAEB",
+                category: "avaliacao",
+                catLabel: "Rubricas & Provas",
+                prompt: "Elabore [QUANTIDADE] questões inéditas de múltipla escolha (5 alternativas, A a E) sobre [TEMA], seguindo a matriz de referência do [ENEM ou SAEB]. Cada questão deve conter um texto-base motivador atual (reportagem, gráfico descrito ou situação-problema), comando claro e gabarito comentado explicando por que a correta está certa e o erro de cada distrator."
+            }
+        ];
+
+        // --- DADOS DE EDUCAÇÃO INCLUSIVA (TEA, TDAH, AH/SD, DI) ---
+        const inclusionData = {
+            tea: {
+                badge: "Transtorno do Espectro Autista (TEA)",
+                title: "Previsibilidade, Literalidade e Apoio Visual",
+                summary: "Estudantes com TEA beneficiam-se de ambientes estruturados, instruções explícitas sem ambiguidade e redução de sobrecarga sensorial nas folhas de atividades.",
+                checklist: [
+                    "Evite ironias, metáforas ou duplos sentidos nos enunciados das questões.",
+                    "Divida tarefas complexas em microetapas numeradas com caixas de checklist.",
+                    "Utilize fontes sem serifa (Arial, Verdana ou Open Sans) e evite poluição visual/bordas decorativas excessivas.",
+                    "Antecipe a rotina da aula no canto do quadro (Início → Atividade → Fechamento).",
+                    "Conecte o conteúdo curricular ao hiperfoco do estudante sempre que possível como ponte de engajamento."
+                ],
+                promptTitle: "Prompt Rápido para TEA",
+                promptText: "Reescreva o enunciado abaixo usando linguagem literal, direta e sem ambiguidades para um aluno autista. Divida a instrução em no máximo 3 passos curtos numerados e destaque as palavras-chave em negrito: [COLAR ENUNCIADO]."
+            },
+            tdah: {
+                badge: "Transtorno do Déficit de Atenção e Hiperatividade (TDAH)",
+                title: "Fragmentação, Foco Visual e Engajamento Ativo",
+                summary: "O cérebro com TDAH precisa de estímulos claros, recompensas imediatas e blocos curtos de atividade para manter a autorregulação e a memória de trabalho.",
+                checklist: [
+                    "Coloque apenas 1 ou 2 questões por página ou seção visualmente bem delimitada.",
+                    "Destaque em negrito ou cor os verbos de comando (ex: CIRCULE, COMPARE, CALCULE).",
+                    "Permita pausas estruturadas e movimentação funcional (ex: entregar folhas, apagar o quadro).",
+                    "Substitua blocos longos de leitura por textos curtos intercalados com perguntas de verificação.",
+                    "Ofereça feedbacks rápidos durante a execução, não apenas ao final do bimestre."
+                ],
+                promptTitle: "Prompt Rápido para TDAH",
+                promptText: "Transforme o conteúdo abaixo em um roteiro de estudo gamificado em 4 blocos curtos de 10 minutos cada para um aluno com TDAH. Inclua um mini-desafio prático ao final de cada bloco e destaque os verbos de ação: [COLAR CONTEÚDO]."
+            },
+            ahsd: {
+                badge: "Altas Habilidades / Superdotação (AH/SD)",
+                title: "Enriquecimento Curricular e Pensamento Complexo",
+                summary: "Alunos com AH/SD não precisam de mais volume de tarefas repetitivas, mas sim de profundidade, autonomia intelectual e desafios criativos.",
+                checklist: [
+                    "Compacte o currículo básico quando o estudante demonstrar domínio prévio do tema.",
+                    "Proponha problemas abertos sem uma única resposta certa, estimulando hipóteses.",
+                    "Incentive projetos interdisciplinares, debates filosóficos e produção científica/artística.",
+                    "Evite usá-lo apenas como 'monitor' para ajudar colegas o tempo todo; garanta seu próprio avanço.",
+                    "Ofereça escolha de formato de entrega (podcast, protótipo, artigo, simulação)."
+                ],
+                promptTitle: "Prompt Rápido para AH/SD",
+                promptText: "Crie 3 propostas de projetos de investigação aprofundada sobre [TEMA] para um estudante com Altas Habilidades/Superdotação do [ANO/SÉRIE], conectando o assunto a dilemas éticos atuais e tecnologia."
+            },
+            di: {
+                badge: "Deficiência Intelectual (DI) & Dislexia",
+                title: "Acessibilidade Cognitiva, Concretude e Leitura Facilitada",
+                summary: "A adaptação para DI e Dislexia foca no núcleo essencial do conceito, utilizando vocabulário acessível, exemplos concretos e tipografia amigável.",
+                checklist: [
+                    "Identifique o objetivo central da aula (o que é essencial que o aluno aprenda) e simplifique conceitos abstratos.",
+                    "Use espaçamento entre linhas de 1.5, alinhamento à esquerda (nunca justificado) e frases curtas.",
+                    "Associe conceitos novos a situações concretas do cotidiano do estudante.",
+                    "Em avaliações, priorize reconhecimento, associação visual e questões objetivas com 3 alternativas claras.",
+                    "Permita recursos de apoio como calculadora, banco de palavras ou leitor de tela."
+                ],
+                promptTitle: "Prompt Rápido para DI & Leitura Fácil",
+                promptText: "Adapte o texto abaixo utilizando os princípios de 'Leitura Fácil' (Easy-to-Read) para um estudante com Deficiência Intelectual. Use frases curtas na voz ativa, vocabulário cotidiano, explique termos difíceis entre parênteses e crie 3 perguntas objetivas de compreensão: [COLAR TEXTO]."
+            }
+        };
+
+        // --- ARTIGOS COMPLETOS PARA O MODAL ---
+        const articlesFullData = [
+            {
+                tag: "Neuroeducação",
+                title: "Como usar o Desenho Universal para a Aprendizagem (DUA) com apoio de IA",
+                paragraphs: [
+                    "O Desenho Universal para a Aprendizagem (DUA) parte de um princípio transformador: as barreiras não estão no estudante, mas no currículo inflexível. Quando planejamos uma aula pensando apenas no 'aluno médio', deixamos de fora tanto estudantes com dificuldades quanto aqueles com altas habilidades.",
+                    "Com o apoio de ferramentas de Inteligência Artificial, o professor deixa de gastar horas reescrevendo três provas diferentes e passa a atuar como um curador de experiências. Você pode gerar, em minutos, um texto-base com áudio integrado, um mapa mental visual e uma atividade prática mão na massa sobre o mesmo objetivo de aprendizagem.",
+                    "Dica prática: sempre que criar uma atividade, pergunte-se: 'Há pelo menos duas formas diferentes de o aluno acessar essa informação e duas formas de demonstrar o que aprendeu?'"
+                ]
+            },
+            {
+                tag: "Avaliação & Ética",
+                title: "Meus alunos usam ChatGPT nas tarefas: como reformular avaliações?",
+                paragraphs: [
+                    "Proibir o uso da IA na educação básica ou superior tornou-se tecnicamente inviável e pedagogicamente pouco produtivo. O caminho mais eficaz é elevar o nível cognitivo das propostas avaliativas.",
+                    "Tarefas baseadas apenas em 'resuma o capítulo X' ou 'defina o conceito Y' são facilmente resolvidas por qualquer chatbot. Em contrapartida, atividades que exigem conectar a teoria com um problema real do bairro da escola, entrevistar familiares, debater em sala ou criticar uma resposta gerada pela própria IA desenvolvem o verdadeiro pensamento crítico.",
+                    "Experimente pedir aos alunos que gerem uma resposta na IA e, em seguida, atuem como 'auditores', apontando erros factuais, vieses ou informações superficiais no texto gerado."
+                ]
+            },
+            {
+                tag: "Produtividade",
+                title: "O Método P.R.O.F.E.: A fórmula definitiva para escrever prompts pedagógicos",
+                paragraphs: [
+                    "Muitos professores testam a IA uma vez, recebem um plano de aula genérico e concluem que a ferramenta não serve para sua realidade. O segredo para transformar a IA em uma verdadeira assistente pedagógica está na estrutura do comando utilizado.",
+                    "Para facilitar o dia a dia docente, utilize o Método P.R.O.F.E., composto por 5 pilares essenciais: 1) P (Propósito): O que o professor quer que a IA faça (ex: criar um plano de aula, adaptar uma atividade, elaborar uma rubrica); 2) R (Referência): O conteúdo, tema, habilidade da BNCC ou material-base que servirá de fundamento; 3) O (Orientações): As regras, o formato desejado (tabela, lista, passo a passo), tempo de duração ou nível de dificuldade; 4) F (Foco no público): A série, faixa etária ou perfil específico dos estudantes (incluindo necessidades educacionais específicas); e 5) E (Estilo e Emoção): O tom e a linguagem da resposta (ex: lúdico, acolhedor, objetivo, investigativo).",
+                    "Ao aplicar os cinco elementos do P.R.O.F.E., você elimina respostas vagas e garante materiais alinhados à realidade da sua turma e prontos para aplicar em sala de aula."
+                ]
+            }
+        ];
+
+        // --- RENDERIZAÇÃO DAS FERRAMENTAS ---
+        function renderTools(filter = 'all') {
+            const grid = document.getElementById('tools-grid');
+            const filtered = filter === 'all' ? toolsData : toolsData.filter(t => t.category === filter);
+
+            grid.innerHTML = filtered.map(tool => `
+                <div class="bg-white/95 backdrop-blur-sm rounded-3xl p-6 border border-black/10 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-2xl bg-brand-dark text-brand-glow flex items-center justify-center shadow-md">
+                                <i class="ph-bold ${tool.icon} text-2xl"></i>
+                            </div>
+                            <span class="px-3 py-1 rounded-full bg-brand-purple/10 text-brand-purple font-bold text-xs">
+                                ${tool.tag}
+                            </span>
+                        </div>
+                        <h3 class="font-display font-extrabold text-xl text-brand-dark mb-2">${tool.name}</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed mb-5">${tool.desc}</p>
+                    </div>
+                    <div class="bg-brand-light/70 rounded-2xl p-3.5 border border-black/5">
+                        <p class="text-xs font-bold text-brand-purple uppercase tracking-wider mb-1 flex items-center gap-1">
+                            <i class="ph-fill ph-lightbulb"></i> Dica Pedagógica
+                        </p>
+                        <p class="text-xs text-gray-800 leading-relaxed">${tool.tip}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- RENDERIZAÇÃO DOS PROMPTS ---
+        function renderPrompts(category = 'all', searchTerm = '') {
+            const grid = document.getElementById('prompts-grid');
+            const filtered = promptsData.filter(p => {
+                const matchesCat = category === 'all' || p.category === category;
+                const matchesSearch = p.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                                      p.prompt.toLowerCase().includes(searchTerm.toLowerCase());
+                return matchesCat && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12 bg-brand-card/50 rounded-3xl border border-white/10">
+                        <i class="ph ph-magnifying-glass text-4xl text-brand-glow mb-2"></i>
+                        <p class="text-gray-300 font-medium">Nenhum prompt encontrado para essa busca.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtered.map((item, idx) => `
+                <div class="bg-brand-card border border-white/10 hover:border-brand-neon/50 rounded-3xl p-6 flex flex-col justify-between transition-all group">
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-3">
+                            <span class="px-3 py-1 rounded-full bg-brand-purple/20 text-brand-glow text-xs font-bold">
+                                ${item.catLabel}
+                            </span>
+                            <button onclick="copyPromptText(${idx}, '${category}', '${searchTerm.replace(/'/g, "\\'")}')" 
+                                class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-brand-purple hover:bg-brand-neon text-white text-xs font-bold transition-all shadow-neon-sm">
+                                <i class="ph-bold ph-copy"></i>
+                                <span>Copiar Prompt</span>
+                            </button>
+                        </div>
+                        <h3 class="font-display font-bold text-lg text-white mb-3 group-hover:text-brand-glow transition-colors">
+                            ${item.title}
+                        </h3>
+                        <div class="bg-brand-dark/90 border border-white/10 rounded-2xl p-4 font-mono text-xs text-gray-300 leading-relaxed select-all">
+                            "${item.prompt}"
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- RENDERIZAÇÃO DA ABA DE EDUCAÇÃO INCLUSIVA ---
+        function switchInclusionTab(profileKey) {
+            // Atualizar estilo dos botões das abas
+            document.querySelectorAll('.inclusion-tab').forEach(btn => {
+                btn.classList.remove('active', 'border-brand-neon', 'bg-brand-purple/25', 'text-white');
+                btn.classList.add('border-white/10', 'bg-brand-dark/60', 'text-gray-300');
+            });
+            const activeBtn = document.getElementById(`tab-${profileKey}`);
+            activeBtn.classList.add('active', 'border-brand-neon', 'bg-brand-purple/25', 'text-white');
+            activeBtn.classList.remove('border-white/10', 'bg-brand-dark/60', 'text-gray-300');
+
+            // Renderizar conteúdo
+            const data = inclusionData[profileKey];
+            const container = document.getElementById('inclusion-content');
+
+            container.innerHTML = `
+                <div class="lg:col-span-7 space-y-5">
+                    <span class="inline-block px-3.5 py-1 rounded-full bg-brand-purple/30 text-brand-glow text-xs font-bold">
+                        ${data.badge}
+                    </span>
+                    <h3 class="font-display font-extrabold text-2xl sm:text-3xl text-white">
+                        ${data.title}
+                    </h3>
+                    <p class="text-gray-300 text-sm sm:text-base leading-relaxed">
+                        ${data.summary}
+                    </p>
+                    <div class="space-y-3 pt-2">
+                        <h4 class="font-display font-bold text-sm uppercase tracking-wider text-brand-glow">
+                            Checklist de Adaptação Prática:
+                        </h4>
+                        <ul class="space-y-2.5">
+                            ${data.checklist.map(item => `
+                                <li class="flex items-start gap-3 text-sm text-gray-200 bg-brand-dark/50 p-3 rounded-xl border border-white/5">
+                                    <i class="ph-fill ph-check-circle text-brand-neon text-lg shrink-0 mt-0.5"></i>
+                                    <span>${item}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 bg-brand-dark border border-brand-neon/40 rounded-2xl p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs font-bold uppercase tracking-wider text-brand-glow flex items-center gap-1.5">
+                                <i class="ph-bold ph-sparkle"></i> ${data.promptTitle}
+                            </span>
+                        </div>
+                        <p class="text-xs text-gray-400 mb-3">
+                            Use este comando para adaptar suas atividades em segundos:
+                        </p>
+                        <div class="bg-brand-card border border-white/10 rounded-xl p-4 font-mono text-xs text-gray-200 leading-relaxed mb-5">
+                            "${data.promptText}"
+                        </div>
+                    </div>
+                    <button onclick="copyDirectText(\`${data.promptText.replace(/`/g, "\\`")}\`)" 
+                        class="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-purple to-brand-neon hover:brightness-110 text-white font-display font-bold text-xs uppercase tracking-wider shadow-neon-sm transition-all flex items-center justify-center gap-2">
+                        <i class="ph-bold ph-copy text-base"></i>
+                        Copiar Prompt de Adaptação
+                    </button>
+                </div>
+            `;
+        }
+
+        // --- FUNÇÕES DE CÓPIA (Compatível com iFrame via execCommand) ---
+        function copyDirectText(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast('Prompt Copiado!', 'Cole no seu assistente de IA e personalize os colchetes.');
+            } catch (err) {
+                showToast('Atenção', 'Selecione o texto manualmente para copiar.');
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function copyPromptText(idx, category, searchTerm) {
+            const filtered = promptsData.filter(p => {
+                const matchesCat = category === 'all' || p.category === category;
+                const matchesSearch = p.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                                      p.prompt.toLowerCase().includes(searchTerm.toLowerCase());
+                return matchesCat && matchesSearch;
+            });
+            if (filtered[idx]) {
+                copyDirectText(filtered[idx].prompt);
+            }
+        }
+
+        // --- TOAST NOTIFICATION ---
+        let toastTimeout;
+        function showToast(title, desc) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-title').textContent = title;
+            document.getElementById('toast-desc').textContent = desc;
+
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3200);
+        }
+
+        // --- MODAIS ---
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function openArticleModal(index) {
+            const article = articlesFullData[index];
+            document.getElementById('modal-article-tag').textContent = article.tag;
+            document.getElementById('modal-article-title').textContent = article.title;
+            document.getElementById('modal-article-body').innerHTML = article.paragraphs.map(p => `<p>${p}</p>`).join('');
+            openModal('modal-article');
+        }
+
+        function handleNewsletterSubmit(e) {
+            e.preventDefault();
+            closeModal('modal-newsletter');
+            showToast('Inscrição Confirmada!', 'Você receberá nossos materiais pedagógicos toda semana.');
+            e.target.reset();
+        }
+
+        function scrollToInclusion(profile) {
+            switchInclusionTab(profile);
+            document.getElementById('educacao-inclusiva').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- INICIALIZAÇÃO E EVENT LISTENERS ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTools('all');
+            renderPrompts('all', '');
+            switchInclusionTab('tea');
+
+            // Filtro de Ferramentas
+            document.querySelectorAll('.tool-filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.tool-filter-btn').forEach(b => {
+                        b.classList.remove('active', 'bg-brand-dark', 'text-white', 'shadow-md');
+                        b.classList.add('bg-white/80', 'text-brand-dark');
+                    });
+                    btn.classList.add('active', 'bg-brand-dark', 'text-white', 'shadow-md');
+                    btn.classList.remove('bg-white/80', 'text-brand-dark');
+                    renderTools(btn.dataset.filter);
+                });
+            });
+
+            // Filtro e Busca de Prompts
+            let currentPromptCat = 'all';
+            const searchInput = document.getElementById('prompt-search');
+
+            document.querySelectorAll('.prompt-cat-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.prompt-cat-btn').forEach(b => {
+                        b.classList.remove('active', 'bg-brand-purple', 'text-white');
+                        b.classList.add('bg-white/5', 'text-gray-300');
+                    });
+                    btn.classList.add('active', 'bg-brand-purple', 'text-white');
+                    btn.classList.remove('bg-white/5', 'text-gray-300');
+                    currentPromptCat = btn.dataset.cat;
+                    renderPrompts(currentPromptCat, searchInput.value);
+                });
+            });
+
+            searchInput.addEventListener('input', (e) => {
+                renderPrompts(currentPromptCat, e.target.value);
+            });
+
+            // Menu Mobile Toggle
+            const mobileBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Fechar menu mobile ao clicar em link
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+            });
+        });
+    </script>
+</body>
+</html>
